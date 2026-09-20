@@ -1,0 +1,75 @@
+# Lint and the Rust test suite. Rust toolchain only -- no Python, no PyTorch, no data.
+#
+# WHAT A GREEN BADGE HERE ATTESTS, AND WHAT IT DOES NOT. This runs the three Rust stages of
+# ./check.sh: rustfmt, clippy, and `cargo test --workspace`. It does NOT run the four pytest
+# suites or the corpus checkers. Those need the `scrm` environment (PyTorch, scanpy -- gigabytes
+# per run) and the 20 pinned corpora (hundreds of gigabytes, not in this repository), so a hosted
+# runner cannot verify them. The full gate is `./check.sh <corpus dir> ...` on a machine with the
+# data root, and that is what attests a release.
+#
+# Six workspace tests SKIP here because no corpus root resolves. That is honest -- the corpora are
+# not in the repository -- but it must be VISIBLE, so the test step passes --nocapture: libtest
+# captures stdout of passing tests regardless of cargo's --quiet, and a skip nobody sees reads as
+# coverage. Read the SKIP: lines in the log rather than the pass count alone.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # The runner's preinstalled Rust is used as-is: it ships rustup with cargo, rustfmt and
+      # clippy, and stable is well past Cargo.toml's rust-version floor of 1.85. Formatting cannot
+      # drift with it, because rustfmt.toml pins style_edition = "2024" rather than inheriting it.
+      # Printed so a fmt or clippy failure names the toolchain that produced it.
+      - name: Toolchain
+        run: rustc --version && cargo fmt --version && cargo clippy --version
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: cargo-${{ runner.os }}-
+
+      # Line length 120 and style_edition 2024 come from rustfmt.toml, not from flags here: a
+      # formatter configured in two places is a formatter that can disagree with the tree.
+      - name: rustfmt
+        run: cargo fmt --check
+
+      - name: clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: cargo test
+        run: cargo test --workspace -- --nocapture
+
+      # The skips are part of the result, so state them rather than leaving them in the scrollback.
+      - name: Report what skipped
+        if: always()
+        run: |
+          echo "Corpus-dependent tests skip here because no corpus root resolves."
+          echo "The full gate, including the pytest suites and the corpus checkers, is:"
+          echo "    SCRM_PY=<abs path to the scrm env python> ./check.sh <corpus dir> ..."

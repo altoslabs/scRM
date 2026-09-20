@@ -1,0 +1,22 @@
+[package]
+name = "scrm-asm"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# The shared contract: K19/Kmer19 (the workspace's single definition of k), Token,
+# Molecule, MoleculeContigs, AssemblyStats.
+scrm-core.workspace = true
+# filter_kmers + compress_kmers + DebruijnGraph, plus the public `KmerSummarizer` trait.
+debruijn.workspace = true
+
+[dev-dependencies]
+# `benches/assembly.rs` is the overlap-kernel bench; scrm-umi carries the dedup bench.
+criterion.workspace = true
+proptest.workspace = true
+
+[[bench]]
+name = "assembly"
+harness = false

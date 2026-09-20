@@ -1,0 +1,56 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Data & artifacts — never in git
+*.arrow
+*.feather
+*.parquet
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.pt
+*.npz
+*.npy
+*.ckpt
+*.safetensors
+*.h5
+*.h5ad
+*.mtx
+*.loom
+*.bam
+*.bai
+*.tsv.gz
+!data/whitelists/*.tsv.gz
+/corpora/
+/checkpoints/
+/logs/
+/scratch/
+
+# Outputs of the documented commands, which default to the repository root
+/runs/
+/eval_runs/
+/eval_artifacts/
+/eval_reports/
+results.html
+
+# Anchored to the repository root: a vendor/ dropped here is untracked, a nested one is not
+# matched.
+/vendor/
+
+# Claude Code's own configuration, all of it: no fragment, paper sentence, test or reproduction
+# step reads any of it.
+.claude/
+
+# Slurm writes these beside the submission when a launcher names no --output
+slurm-*.out

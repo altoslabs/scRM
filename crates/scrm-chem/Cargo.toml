@@ -1,0 +1,10 @@
+[package]
+name = "scrm-chem"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+seq_geom_parser.workspace = true

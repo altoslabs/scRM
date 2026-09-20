@@ -1,0 +1,37 @@
+# How every corpus is acquired. model/jobs/corpus.sbatch <key> reads one row.
+#
+# key         corpus directory name
+# role        train | eval | screen
+# kind        tenx-tar     <base>/<ver>/<sample>/<sample>_fastqs.tar
+#             sra-reads    prefetch + fasterq-dump
+#             sra-bam      Cell Ranger BAM from EBI's SRA mirror, via bamtofastq
+#             ebi-files    per-lane fastq.gz under an EBI BioStudies accession
+#             czb-s3       public S3 bucket, --no-sign-request
+#             permuted-from  scrm-permute rewrites a built corpus
+# source      k=v;k=v locator for the kind
+# whitelist   h5 | tar:<member> | repo:<path> | geo:<GSM>#<file> | json:<path>#<sample>
+#             | matrix:<path> | derived | UNRESOLVED (refused)
+# geometry    FGDL string
+# species     for gene-set and ortholog selection
+# tools       external programs beyond the conda env, ; separated
+key	role	kind	source	whitelist	geometry	species	tools	note
+nuclei_2k	eval	tenx-tar	host=cf;ver=2.1.0;sample=nuclei_2k	tar:filtered_gene_bc_matrices/mm10/barcodes.tsv	1{b[16]u[10]}2{r:}	mouse	-	Cell Ranger 2.1 published no h5, so the called-cell list is a tarball member
+neuron_1k_v3	train	tenx-tar	host=cf;ver=3.0.0;sample=neuron_1k_v3	h5	1{b[16]u[12]}2{r:}	mouse	-	
+mouse_brain_5k	train	tenx-tar	host=cf;ver=7.0.0;sample=5k_mouse_brain_CNIK_3pv3	h5	1{b[16]u[12]}2{r:}	mouse	-	
+neurons_5k	train	tenx-tar	host=cf;ver=6.0.0;sample=SC3_v3_NextGem_DI_Neurons_5K_Multiplex	repo:data/whitelists/neurons_5k.barcodes.tsv.gz	1{b[16]u[12]}2{r:}	mouse	-	no whitelist URL resolves; the list ships with the tree
+sod1_spinal_cord	train	tenx-tar	host=s3;ver=10.0.0;sample=SOD1_G93A_mouse_spinal_cord_P112_specimen_1_Multiplex	h5	1{b[16]u[12]}2{r:}	mouse	-	
+heart_10k_v3	eval	tenx-tar	host=cf;ver=3.0.0;sample=heart_10k_v3	h5	1{b[16]u[12]}2{r:}	mouse	-	
+neuron_10k_v3	eval	tenx-tar	host=cf;ver=3.0.0;sample=neuron_10k_v3	h5	1{b[16]u[12]}2{r:}	mouse	-	
+pbmc_10k_v3	eval	tenx-tar	host=cf;ver=3.0.0;sample=pbmc_10k_v3	h5	1{b[16]u[12]}2{r:}	human	-	
+pbmc_1k_v2	eval	tenx-tar	host=cf;ver=3.0.0;sample=pbmc_1k_v2	h5	1{b[16]u[10]}2{r:}	human	-	3' v2: 10 bp UMI, unlike its v3 siblings
+crispr_a549_5k	screen	tenx-tar	host=cf;ver=6.0.0;sample=SC3_v3_NextGem_DI_CRISPR_A549_5K_Multiplex;extra=SC3_v3_NextGem_DI_CRISPR_A549_5K_SC3_v3_NextGem_DI_CRISPR_A549_5K/SC3_v3_NextGem_DI_CRISPR_A549_5K_SC3_v3_NextGem_DI_CRISPR_A549_5K_count_crispr_analysis.tar.gz	derive:crispr_a549_5k	1{b[16]u[12]}2{r:}	human	-	the CRISPR screen; the guide-called whitelist and the labels are derived from the extra tarball
+sc_mixology_5cl	eval	sra-reads	srr=SRR8606521	derive:sc_mixology_5cl	1{b[16]u[10]}2{r:}	human	sra-tools	sc-mixology 5-cell-line mixture; the called cells and the cell-line labels are derived from the published metadata
+tm_10X_P7_2	eval	czb-s3	bucket=czb-tabula-muris-senis;prefix=10x/FASTQs;channel=10X_P7_2;extra=Metadata/tabula-muris-senis-full-metadata.csv	derive:tm_10X_P7_2	1{b[16]u[10]}2{r:}	mouse	aws-cli	Tabula Muris Senis channel 10X_P7_2; the called cells are the annotated cells, derived from the bucket's metadata
+got_ET01	eval	sra-bam	srr=SRR7613775;tag=ET01;gsm_matrix=GSM3309832;gsm_genotype=GSM3309838	geo:GSM3309838#ET01.CALR.txt.gz	1{b[16]u[10]}2{r:}	human	bamtofastq	Cell Ranger BAM, NOT a read submission; whitelist is the >=2-informative-read genotyped cells
+fly_antenna	eval	ebi-files	accession=E-MTAB-10519;sample=FCA43_Male_antenna_adult_5dWT_Luo_sample1;lanes=S54,S58,S61,S69;lane_suffix=L004;cells_called=6343	repo:data/whitelists/fly_antenna.barcodes.tsv.gz	1{b[16]u[12]}2{r:}	fly	-	Fly Cell Atlas; the called cells are the obs of the atlas' STRINGENT antenna 10x h5ad at https://cloud.flycellatlas.org/index.php/s/jpLWSwcA638yZka/download (MEASURED 200, HDF5 magic), whose FCA43 sample1 holds these 6,343. The list ships here rather than being re-extracted, because that h5ad is served chunked with no content-length and the extraction needs all of it for 27 KB of barcodes
+2500_rhesus_monkey_pbmcs_singleplex_3p_gem_x	train	tenx-tar	host=cf;ver=9.0.0;sample=2500_Rhesus_Monkey_PBMCs_Singleplex_3p_gem-x_Universal_Multiplex	h5-multi	1{b[16]u[12]}2{r:}	macaque	-	cross-species transfer, figures/species_data.tex; 10x aligned to rheMac10 but annotated against HUMAN gene models, so no ortholog bridge
+2500_wistar_rat_pbmcs_singleplex_3p_gem_x	train	tenx-tar	host=cf;ver=9.0.0;sample=2500_Wistar_Rat_PBMCs_Singleplex_3p_gem-x_Universal_Multiplex	h5-multi	1{b[16]u[12]}2{r:}	rat	-	cross-species transfer, figures/species_data.tex; DOES need the ortholog bridge
+mouse_brain_5k_permuted	train	permuted-from	src=mouse_brain_5k;seed=20260901	derived	1{b[16]u[12]}2{r:}	mouse	-	C3 control: molecules permuted across cells, per-cell counts held exactly
+neuron_1k_v3_permuted	train	permuted-from	src=neuron_1k_v3;seed=20260901	derived	1{b[16]u[12]}2{r:}	mouse	-	C3 control
+neurons_5k_permuted	train	permuted-from	src=neurons_5k;seed=20260901	derived	1{b[16]u[12]}2{r:}	mouse	-	C3 control
+sod1_spinal_cord_permuted	train	permuted-from	src=sod1_spinal_cord;seed=20260901	derived	1{b[16]u[12]}2{r:}	mouse	-	C3 control

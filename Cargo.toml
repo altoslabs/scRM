@@ -1,0 +1,91 @@
+[workspace]
+members = ["crates/*"]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+repository = "https://github.com/altoslabs/scRM"
+
+[workspace.dependencies]
+# ---------------------------------------------------------------- internal
+scrm-core = { path = "crates/scrm-core" }
+scrm-corpus = { path = "crates/scrm-corpus" }
+scrm-pack = { path = "crates/scrm-pack" }
+
+# ---------------------------------------------------------------- errors, logging, CLI
+anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# ---------------------------------------------------------------- parallelism
+rayon = "1"
+# The Python bridge. abi3-py311: one wheel works across Python >= 3.11.
+pyo3 = "0.26"
+numpy = "0.26"
+# Zero-copy corpus reads on the TRAINING path, which reads the corpus per step in the hot loop.
+memmap2 = "0.9"
+crossbeam = "0.8"
+
+# ---------------------------------------------------------------- FASTQ + decompression
+# `paraseq-temp` is COMBINE-lab's republication of paraseq 0.5.0 plus the resizable
+# worker pool (noamteyssier/paraseq#78); its lib target is named `paraseq`.
+# default-features = false drops `niffler/default`, which enables bgz, bz2, lzma and
+# zstd alongside gz (read from niffler 3.0.1's own Cargo.toml). Taking `niffler`
+# WITHOUT its defaults, plus the direct pin to `gz` only, keeps transparent gzip and
+# leaves the bgz/bz2/lzma/zstd backends and their C build dependencies out of the
+# tree: nothing in the pipeline reads bz2, lzma or zstd. The `links = "lzma"`
+# collision that first forced this -- trim-galore -> fastqc-rust -> zip -> xz2 ->
+# lzma-sys against niffler's liblzma-sys -- left with the external trimmer, and
+# Cargo.lock now holds no trim-galore, fastqc, xz2 or lzma entry at all. The codec
+# surface is the whole of the remaining reason for the pin.
+paraseq = { package = "paraseq-temp", version = "0.5.0-pre.2", default-features = false, features = ["anyhow", "niffler"] }
+niffler = { version = "3", default-features = false, features = ["gz"] }
+flate2 = { version = "1.1", default-features = false, features = ["zlib-rs"] }
+# Parallel gzip decode. PIN >= 0.3.1: it closes a lost-wakeup deadlock in the
+# shared decoder pool.
+rapidgzip-core = { version = "0.3.1", features = ["busy-time-accounting"] }
+# Adaptive decode/process thread split. Advisory only; cannot affect output.
+thread-broker = "0.1.0"
+
+# ---------------------------------------------------------------- chemistry geometry
+seq_geom_parser = "1.1.0"
+
+# ---------------------------------------------------------------- cell barcodes
+# BarcodeLookupMap (prefix/suffix-indexed Hamming-1). Pinned by git rev: a version
+# mismatch pulls two copies of noodles/zstd/flate2 into the tree.
+libradicl = { version = "0.17.0", git = "https://github.com/COMBINE-lab/libradicl.git", rev = "194d127105f22acbc1d9731c68022d610cc5ca86" }
+
+# ---------------------------------------------------------------- assembly
+debruijn = "0.3.4"
+
+# ---------------------------------------------------------------- corpus IO
+arrow = "56"
+arrow-ipc = "56"
+# For `alloc::Allocation`, so a Buffer can borrow a mmap instead of copying it.
+arrow-buffer = "56"
+
+# ---------------------------------------------------------------- randomness (C3's seeded permutation)
+# ChaCha8Rng by NAME: rand documents its stream as stable across versions.
+rand = "0.9"
+rand_chacha = "0.9"
+
+# ---------------------------------------------------------------- provenance
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+
+# ---------------------------------------------------------------- testing
+proptest = "1"
+criterion = "0.7"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[profile.bench]
+lto = true
+codegen-units = 1

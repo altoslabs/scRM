@@ -1,0 +1,88 @@
+# Cut a release when a version tag is pushed.
+#
+# A SOURCE release, deliberately. The published model weights are not in this repository and are
+# not attached here: every checkpoint extension is gitignored, and the paper states the arms are
+# released on publication. What this attaches is the source tree a reader needs to verify
+# a checkpoint they obtain elsewhere -- `eval/scrm_eval/embed.py` recomputes `arch_sha` from the
+# checkpoint and asserts it against the released code, so the tarball is what makes that check
+# meaningful.
+#
+# NOTE ON `main`: that branch is published as a single orphan commit and is force-pushed on each
+# update, so it carries no release history to tag. A tag therefore marks the tree at a moment
+# rather than a point in a lineage, which is why this workflow records the commit sha in the body.
+# Tag from the commit you published:
+#     git tag -a v0.1.0 -m "scRM v0.1.0" <sha> && git push origin v0.1.0
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to build a release for
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      # The Rust half of the gate runs again here rather than trusting that ci.yml ran on this
+      # exact tree: a tag can point at a commit no CI run ever saw. Runner's preinstalled
+      # toolchain, printed so the verdict names it.
+      - name: Verify before publishing
+        run: |
+          rustc --version && cargo fmt --version
+          cargo fmt --check
+          cargo clippy --workspace --all-targets -- -D warnings
+          cargo test --workspace -- --nocapture
+
+      # git archive, so the tarball is exactly the tracked tree at the tag -- no build output, no
+      # gitignored files, reproducible from the sha alone.
+      - name: Build the source tarball
+        id: pack
+        run: |
+          TAG="${{ inputs.tag || github.ref_name }}"
+          NAME="scrm-${TAG#v}"
+          git archive --format=tar.gz --prefix="$NAME/" -o "$NAME.tar.gz" HEAD
+          sha256sum "$NAME.tar.gz" > "$NAME.tar.gz.sha256"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          cat "$NAME.tar.gz.sha256"
+
+      # gh is preinstalled on the runner, so no marketplace action enters the dependency surface.
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG='${{ steps.pack.outputs.tag }}'
+          NAME='${{ steps.pack.outputs.name }}'
+          {
+            echo "Source release of scRM at \`${{ github.sha }}\`."
+            echo
+            echo "Reference-free byte-level model of single-cell RNA-seq. MIT licensed."
+            echo
+            echo "**Not included:** model weights. Checkpoints are distributed separately;"
+            echo "\`eval/scrm_eval/embed.py\` recomputes \`arch_sha\` from a checkpoint and asserts"
+            echo "it against this tree, so a checkpoint obtained elsewhere can be verified against"
+            echo "this source."
+            echo
+            echo "**Verifying this archive**"
+            echo '```'
+            cat "$NAME.tar.gz.sha256"
+            echo '```'
+          } > notes.md
+          gh release create "$TAG" \
+            --title "scRM $TAG" \
+            --notes-file notes.md \
+            "$NAME.tar.gz" "$NAME.tar.gz.sha256"

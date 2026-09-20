@@ -1,0 +1,51 @@
+# Python dependencies for scrm_model (model/), scrm_eval (eval/) and measurements/.
+# The versions below are the ones this tree is verified against; they are floors, not
+# independently established minima. Python >= 3.11.
+#
+#   pip install -r requirements.txt
+#
+# The Rust packer extension is built separately and is required by the model and the
+# packer test suite:
+#
+#   cargo build --release -p scrm-py
+#   mkdir -p target/py && cp target/release/libscrm_py.so target/py/scrm_py.so
+#
+# Every entrypoint expects  PYTHONPATH=model:eval:target/py
+
+# --- core: the model, the corpus reader, and every probe ---
+numpy>=2.4
+torch>=2.11
+pyarrow>=23.0
+scipy>=1.17
+pandas>=2.3
+scikit-learn>=1.8
+joblib>=1.5
+threadpoolctl>=3.6
+
+# --- evaluation targets: count matrices, HVG selection, graph clustering, QC ---
+# networkx provides the Louvain community detection the marker panels are built on
+# (metrics.CLUSTER_ALGO). scanpy's own `tl.leiden` is NOT used and `leidenalg`/`python-igraph`
+# are deliberately absent: both are GPL, this project is MIT, and no GPL package may be a
+# requirement of it. scikit-image is what the doublet call falls back from when absent;
+# the fallback is recorded in the report's provenance rather than skipped silently.
+networkx>=3.0
+scikit-image>=0.24
+anndata>=0.12
+scanpy>=1.11
+
+# --- probes and controls ---
+statsmodels>=0.14
+decoupler>=2.2
+
+# --- baseline weight loading ---
+safetensors>=0.8
+huggingface-hub>=0.36
+
+# --- tests ---
+pytest>=9.0
+
+# --- optional ---
+# Absent by default. Each is reached by one measurement script, which reports the
+# fallback in its provenance rather than skipping silently:
+#   scib-metrics     measurements/ batch-integration metrics
+#   mappy            measurements/ alignment-based checks

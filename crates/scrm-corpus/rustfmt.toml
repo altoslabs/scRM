@@ -1,0 +1,3 @@
+# Line length 120, per the crate's brief. Scoped to this crate so the rest of the
+# workspace keeps the formatting it was committed with.
+max_width = 120

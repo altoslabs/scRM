@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 588155430049f020457dd84e68ffcc3f076ff67f40fc0013004467ea091c9eda # shrinks to rows = [("CELL0000", MoleculeContigs { cell: CellId(0), umi: Umi(0), n_reads: 1, tokens: [0], n_contigs: 1 })]

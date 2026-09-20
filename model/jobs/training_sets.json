@@ -1,0 +1,193 @@
+{
+  "_why": "Derived by measurements/training_sets.py from model/jobs/tenx_pretrain_datasets.tsv and the corpora on disk. Do not hand-edit: re-run with --write so the sets stay re-derivable.",
+  "sets": {
+    "human": {
+      "cells": 71938,
+      "corpora": [
+        "1k_pbmcs_totalseq_b_3p",
+        "1k_pbmcs_totalseq_b_3p_lt",
+        "3p_acda_sepmate",
+        "3p_citrate_cpt",
+        "3p_citrate_sepmate",
+        "3p_edta_sepmate",
+        "3p_heparin_sepmate",
+        "500_pbmc_3p_lt_controller",
+        "500_pbmc_3p_lt_x",
+        "5k_human_donor2_pbmc_3p_gem_x",
+        "5k_human_donor3_pbmc_3p_gem_x",
+        "5k_human_donor4_pbmc_3p_gem_x",
+        "5k_human_jejunum_cnik_3pv3",
+        "5k_pbmc_protein_v3",
+        "5k_pbmc_protein_v3_nextgem",
+        "brain_tumor_3p",
+        "brain_tumor_3p_lt",
+        "breast_cancer_3p_lt",
+        "pbmc_1k_protein_v3",
+        "pbmc_1k_v3",
+        "sc3pv3_gex_human_pbmc",
+        "sc3v3_di_pbmc_csp_1k",
+        "sc3v3_si_pbmc_csp_1k",
+        "wb_lysis_granulocytes_3p_introns_8kcells"
+      ],
+      "n_corpora": 24,
+      "name": "human",
+      "species": [
+        "human"
+      ],
+      "steps_one_pass": 29010,
+      "tissues": [
+        "brain_tumour",
+        "breast_tumour",
+        "jejunum",
+        "pbmc",
+        "whole_blood"
+      ],
+      "tokens": 121676521521
+    },
+    "mixed56": {
+      "cells": 35719,
+      "corpora": [
+        "1k_hgmm_3p_lt",
+        "1k_mouse_kidney_cnik_3pv3",
+        "1k_pbmcs_totalseq_b_3p_lt",
+        "2500_rhesus_monkey_pbmcs_singleplex_3p_gem_x",
+        "2500_wistar_rat_pbmcs_singleplex_3p_gem_x",
+        "5k_human_jejunum_cnik_3pv3",
+        "5k_mouse_liver_cnik_3pv3",
+        "brain_tumor_3p",
+        "brain_tumor_3p_lt",
+        "breast_cancer_3p_lt",
+        "heart_1k_v3",
+        "mouse_brain_5k",
+        "neuron_1k_v3",
+        "pbmc_1k_protein_v3",
+        "wb_lysis_granulocytes_3p_introns_8kcells"
+      ],
+      "n_corpora": 15,
+      "name": "mixed56",
+      "species": [
+        "human",
+        "human+mouse",
+        "macaque",
+        "mouse",
+        "rat"
+      ],
+      "steps_one_pass": 13689,
+      "tissues": [
+        "brain",
+        "brain_tumour",
+        "breast_tumour",
+        "cell_line",
+        "heart",
+        "jejunum",
+        "kidney",
+        "liver",
+        "neuron",
+        "pbmc",
+        "whole_blood"
+      ],
+      "tokens": 57416887225
+    },
+    "mixedfull": {
+      "cells": 129263,
+      "corpora": [
+        "1k_hgmm_3p",
+        "1k_hgmm_3p_lt",
+        "1k_hgmm_v3",
+        "1k_hgmm_v3_nextgem",
+        "1k_mouse_kidney_cnik_3pv3",
+        "1k_pbmcs_totalseq_b_3p",
+        "1k_pbmcs_totalseq_b_3p_lt",
+        "2500_rhesus_monkey_pbmcs_singleplex_3p_gem_x",
+        "2500_wistar_rat_pbmcs_singleplex_3p_gem_x",
+        "3p_acda_sepmate",
+        "3p_citrate_cpt",
+        "3p_citrate_sepmate",
+        "3p_edta_sepmate",
+        "3p_heparin_sepmate",
+        "500_hgmm_3p_lt_controller",
+        "500_hgmm_3p_lt_x",
+        "500_pbmc_3p_lt_controller",
+        "500_pbmc_3p_lt_x",
+        "5k_human_donor2_pbmc_3p_gem_x",
+        "5k_human_donor3_pbmc_3p_gem_x",
+        "5k_human_donor4_pbmc_3p_gem_x",
+        "5k_human_jejunum_cnik_3pv3",
+        "5k_mouse_heart_cnik_3pv3",
+        "5k_mouse_liver_cnik_3pv3",
+        "5k_pbmc_protein_v3",
+        "5k_pbmc_protein_v3_nextgem",
+        "brain_tumor_3p",
+        "brain_tumor_3p_lt",
+        "breast_cancer_3p_lt",
+        "heart_1k_v3",
+        "hgmm_1k_v3",
+        "mouse_brain_5k",
+        "neuron_1k_v3",
+        "neurons_5k",
+        "pbmc_1k_protein_v3",
+        "pbmc_1k_v3",
+        "sc3pv3_gex_human_pbmc",
+        "sc3v3_di_human_mouse_1k",
+        "sc3v3_di_pbmc_csp_1k",
+        "sc3v3_si_human_mouse_1k",
+        "sc3v3_si_pbmc_csp_1k",
+        "sod1_spinal_cord",
+        "wb_lysis_granulocytes_3p_introns_8kcells"
+      ],
+      "n_corpora": 43,
+      "name": "mixedfull",
+      "species": [
+        "human",
+        "human+mouse",
+        "macaque",
+        "mouse",
+        "rat"
+      ],
+      "steps_one_pass": 57999,
+      "tissues": [
+        "brain",
+        "brain_tumour",
+        "breast_tumour",
+        "cell_line",
+        "heart",
+        "jejunum",
+        "kidney",
+        "liver",
+        "neuron",
+        "pbmc",
+        "spinal_cord",
+        "whole_blood"
+      ],
+      "tokens": 243264529778
+    },
+    "mouse56": {
+      "cells": 42560,
+      "corpora": [
+        "1k_mouse_kidney_cnik_3pv3",
+        "5k_mouse_heart_cnik_3pv3",
+        "5k_mouse_liver_cnik_3pv3",
+        "heart_1k_v3",
+        "mouse_brain_5k",
+        "neuron_1k_v3",
+        "neurons_5k",
+        "sod1_spinal_cord"
+      ],
+      "n_corpora": 8,
+      "name": "mouse56",
+      "species": [
+        "mouse"
+      ],
+      "steps_one_pass": 13505,
+      "tissues": [
+        "brain",
+        "heart",
+        "kidney",
+        "liver",
+        "neuron",
+        "spinal_cord"
+      ],
+      "tokens": 56642786570
+    }
+  }
+}

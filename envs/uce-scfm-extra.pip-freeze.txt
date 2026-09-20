@@ -1,0 +1,78 @@
+# `uce-scfm-extra` IS NOT A CONDA ENVIRONMENT. It is a pip `--target` DIRECTORY at
+# <data-root>/envs/uce-scfm-extra (3.4 GB, 43 distributions), put on PYTHONPATH
+# rather than installed:
+#
+#   PYTHONPATH=$PROJ/envs/uce-scfm-extra .../micromamba/envs/scfm/bin/python \
+#       measurements/embed_uce.py ...          # model/jobs/uce_matrix.sbatch:97
+#
+# So `micromamba env export -n uce-scfm-extra` cannot pin it and never could -- there is no such
+# env. This file is the equivalent pin, taken with the interpreter that actually loads it:
+#
+#   Generated: 2026-09-06T18:44:19Z
+#   <env-prefix>/envs/scfm/bin/pip freeze --path <data-root>/envs/uce-scfm-extra
+#
+# TO RECREATE: micromamba create the `scfm` env from envs/scfm.conda-explicit.txt, then
+#
+#   .../envs/scfm/bin/pip install --target <dir> -r envs/uce-scfm-extra.pip-freeze.txt
+#
+# IT SHADOWS scfm, AND THAT IS THE ENVIRONMENT THE PAPER'S UCE COLUMN WAS PRODUCED UNDER. PYTHONPATH
+# PREPENDS, so the versions below win over the ones installed in `scfm` itself. MEASURED, by
+# importing under exactly the launcher's PYTHONPATH:
+#
+#   torch  2.13.0+cu130  (from this directory)   vs  scfm's own 2.3.1
+#   numpy  2.4.6         (from this directory)   vs  scfm's own 1.26.4
+#
+# The directory's name says "extra ... for accelerate" (measurements/embed_uce.py:3) and that
+# understates it: a torch and a numpy major-version swap travel with the accelerate install. Pinning
+# it is what makes the UCE rows attributable; do not "fix" the shadowing without re-embedding, since
+# a different torch is a different forward (eval/scrm_eval/artifact.py's forward_precision rule is
+# the same principle one layer up).
+#
+# TWO accelerate DIST-INFOS ARE PRESENT -- accelerate-0.24.0.dist-info and accelerate-1.2.1.dist-info
+# -- because 1.2.1 was installed over 0.24.0 into the same target and pip's --target does not remove
+# the old metadata. The LIVE version is 1.2.1, which is what `pip freeze --path` reports here and
+# what `import accelerate; accelerate.__version__` returns under the launcher's PYTHONPATH (both
+# checked 2026-09-06). 0.24.0 is a metadata leftover, not a second install.
+accelerate==1.2.1
+anyio==4.14.2
+certifi==2026.7.22
+click==8.4.2
+cuda-bindings==13.3.1
+cuda-pathfinder==1.7.0
+cuda-toolkit==13.0.3.0
+filelock==3.32.4
+fsspec==2026.7.0
+h11==0.16.0
+hf-xet==1.6.0
+httpcore==1.0.9
+httpx==0.28.1
+huggingface_hub==1.28.0
+idna==3.19
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+mpmath==1.3.0
+networkx==3.6.1
+numpy==2.4.6
+nvidia-cublas==13.1.1.3
+nvidia-cuda-cupti==13.0.85
+nvidia-cuda-nvrtc==13.0.88
+nvidia-cuda-runtime==13.0.96
+nvidia-cudnn-cu13==9.20.0.48
+nvidia-cufft==12.0.0.61
+nvidia-cufile==1.15.1.6
+nvidia-curand==10.4.0.35
+nvidia-cusolver==12.0.4.66
+nvidia-cusparse==12.6.3.3
+nvidia-cusparselt-cu13==0.8.1
+nvidia-nccl-cu13==2.29.7
+nvidia-nvjitlink==13.3.33
+nvidia-nvshmem-cu13==3.4.5
+nvidia-nvtx==13.0.85
+packaging==26.3
+psutil==7.2.2
+PyYAML==6.0.3
+sympy==1.14.0
+torch==2.13.0
+tqdm==4.70.0
+triton==3.7.1
+typing_extensions==4.16.0

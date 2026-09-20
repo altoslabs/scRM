@@ -1,0 +1,140 @@
+{
+  "_why": [
+    "Stream digests, row counts, token counts and cell counts pinned per molecule definition. Checked by pinned_digests.py."
+  ],
+  "trees": [
+    {
+      "bounds": {
+        "alphabet_size": 7,
+        "k": 19,
+        "dedup_rule": "1MM_CR_flow",
+        "bubble_resolution": "likelihood-q10-pre45-post40-omega7-walk2-consume-tip-anchored-rejoin-flank-seeded",
+        "min_umi_len": 60,
+        "max_umi_len": 1600,
+        "min_cell_molecules": 500
+      },
+      "corpora": {
+        "2500_rhesus_monkey_pbmcs_singleplex_3p_gem_x": {
+          "stream_sha256": "d45820974fb3823ced8dfae2ae040ab4a4341ba5f54f613246819b381b96725e",
+          "n_rows": 36619119,
+          "n_tokens": 4339300654,
+          "cells": 2714
+        },
+        "2500_wistar_rat_pbmcs_singleplex_3p_gem_x": {
+          "stream_sha256": "1ac248dfcbc2f9b51333dbfcbf95f88d0fe7a9654a188d5e793af109d7cfac2e",
+          "n_rows": 36797730,
+          "n_tokens": 4567451659,
+          "cells": 2474
+        },
+        "crispr_a549_5k": {
+          "stream_sha256": "b63750e8985a68f0ccdd6a5dc4f384380675d1c7d56bbb0548fb8f3a527d20ef",
+          "n_rows": 81143477,
+          "n_tokens": 7285800777,
+          "cells": 4867
+        },
+        "fly_antenna": {
+          "stream_sha256": "590df69c8830e7e7ba71cb83f7a095efbc73cbc5c4169587bd52c99968e24cd2",
+          "n_rows": 26621003,
+          "n_tokens": 6419475394,
+          "cells": 6343
+        },
+        "got_ET01": {
+          "stream_sha256": "542189dcf134c8c6f0f7d4d70ae9998a8c38c549781830cb7e806dce14583f7c",
+          "n_rows": 48167205,
+          "n_tokens": 5863868244,
+          "cells": 5255
+        },
+        "heart_10k_v3": {
+          "stream_sha256": "b86a07947ceec1f80ac4cde7fa9b9d64179c149ae60ad0f66a05456e43753eee",
+          "n_rows": 136883987,
+          "n_tokens": 16448955748,
+          "cells": 7713
+        },
+        "mouse_brain_5k": {
+          "stream_sha256": "8cb67db91517495ffc2bd19dcb65fdfa4e033230e387ad23830458e43d5c1d59",
+          "n_rows": 68519985,
+          "n_tokens": 7388681551,
+          "cells": 7377
+        },
+        "mouse_brain_5k_permuted": {
+          "stream_sha256": "1f9d2bc75746a08a4dc71afcae1c967c540d29d8646155e7b6e5d4c1eae75cf8",
+          "n_rows": 68519985,
+          "n_tokens": 7388681551,
+          "cells": 7377
+        },
+        "neuron_10k_v3": {
+          "stream_sha256": "76d6cf89d863d7d36a166afc22d0da0068ab7177c77073282f2924add0f6834c",
+          "n_rows": 150701511,
+          "n_tokens": 19432950226,
+          "cells": 11843
+        },
+        "neuron_1k_v3": {
+          "stream_sha256": "d530506a68b8101fcf7cb00b35ff4efcada5a76b1b67f26f8f70d23f7f2b37ae",
+          "n_rows": 25008307,
+          "n_tokens": 4120362540,
+          "cells": 1301
+        },
+        "neuron_1k_v3_permuted": {
+          "stream_sha256": "57f52e1ce8c3238e282fb678dce1daa5ea79792f785b0e9fce858b774639a003",
+          "n_rows": 25008307,
+          "n_tokens": 4120362540,
+          "cells": 1301
+        },
+        "neurons_5k": {
+          "stream_sha256": "ebe0ef902039d42bd1335a25f7c52adf175dca468e26fd742a79f3aaf9264d14",
+          "n_rows": 80787280,
+          "n_tokens": 9596058531,
+          "cells": 5483
+        },
+        "neurons_5k_permuted": {
+          "stream_sha256": "323706d93002c835ff04e5aba8d29d8570a5af8e87a83bdefc2bdbc26a87199d",
+          "n_rows": 80787280,
+          "n_tokens": 9596058531,
+          "cells": 5483
+        },
+        "nuclei_2k": {
+          "stream_sha256": "4a32eeaedf470ca9c5f3b582b9638259022da4fee878f937158de72feadab406",
+          "n_rows": 9282464,
+          "n_tokens": 3796204656,
+          "cells": 2288
+        },
+        "pbmc_10k_v3": {
+          "stream_sha256": "9a7dccc2c530d8fa886d11e9ba8a9a4bba409a2b6ae197343f22e11d812d342b",
+          "n_rows": 170972332,
+          "n_tokens": 27713477308,
+          "cells": 11769
+        },
+        "pbmc_1k_v2": {
+          "stream_sha256": "d84bf81570b05027b4c3e8839e5b7003629be349a653cd3caded62fcdbd55736",
+          "n_rows": 4698793,
+          "n_tokens": 1677332297,
+          "cells": 996
+        },
+        "sc_mixology_5cl": {
+          "stream_sha256": "87bd32c254add16ea457a5d557de41dd3310df7a5b607b38f51e6f3a1d829e0d",
+          "n_rows": 97290019,
+          "n_tokens": 18675418956,
+          "cells": 3918
+        },
+        "sod1_spinal_cord": {
+          "stream_sha256": "43a22337277b9c94044d0f88604b7612b64d4362ae1f1ccc08b0493c580be203",
+          "n_rows": 132735625,
+          "n_tokens": 15704946235,
+          "cells": 16410
+        },
+        "sod1_spinal_cord_permuted": {
+          "stream_sha256": "268455a3a099ff4068d48a797efa97e10b052f3e29af7ed9324812078da6bf63",
+          "n_rows": 132735625,
+          "n_tokens": 15704946235,
+          "cells": 16410
+        },
+        "tm_10X_P7_2": {
+          "stream_sha256": "8bf954eb22c06253cf7f7651cc58f76bb2632db0e89d359525a58ae75c13f536",
+          "n_rows": 18922030,
+          "n_tokens": 6280972706,
+          "cells": 1645
+        }
+      }
+    }
+  ]
+}

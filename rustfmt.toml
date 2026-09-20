@@ -1,0 +1,13 @@
+# The design specifies line length 120. Without this, rustfmt reflows to its
+# default 100 and the format hook silently disagrees with the spec.
+max_width = 120
+
+# Pinned for the same reason max_width is: so the formatter cannot silently
+# disagree with the tree. The workspace is edition 2024, whose style edition
+# changed import sorting (`{criterion_group, criterion_main, Criterion}` now
+# sorts as `{Criterion, criterion_group, criterion_main}`). The tree had been
+# written under the older rule, so `cargo fmt --check` failed on 84 files at
+# HEAD while every commit looked clean -- a formatter that disagrees with the
+# code is the same as having no formatter. Stated explicitly rather than
+# inherited from `edition`, so a toolchain bump cannot reformat the world.
+style_edition = "2024"
